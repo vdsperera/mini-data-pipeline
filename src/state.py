@@ -1,6 +1,9 @@
 import json
+import logging
 import os
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 class State:
     def __init__(self, path: str | Path):
@@ -17,7 +20,8 @@ class State:
                     "completed": list(d.get("completed", [])),
                     "failed": dict(d.get("failed", {})) if isinstance(d.get("failed"), dict) else {str(x): "" for x in d.get("failed", [])},
                 }
-        except Exception:
+        except Exception as exc:
+            logger.warning("Failed to parse state file %s (%s). Starting with fresh state.", self.path, exc)
             return {"completed": [], "failed": {}}
 
     def _save(self) -> None:
