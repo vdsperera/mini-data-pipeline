@@ -1,0 +1,19 @@
+---
+trigger: model_decision
+description: Use when writing pytest tests or doing the final self-review checklist before finishing.
+---
+
+- pytest, plain functions, `tmp_path` for files, `monkeypatch`/`unittest.mock` for network and browser.
+- Test the logic (parsing, retry decisions, state file, dedupe), not the internet. At most one clearly marked live/smoke test.
+- Name tests `test_<thing>_<condition>_<expected>`.
+- Cover: happy path, empty input, one bad record in the middle, rerun after partial failure (idempotency).
+
+## Self-review checklist (run this before saying "done")
+- [ ] Every requirement in REQUIREMENTS.md is met or listed as a limitation
+- [ ] Runs from a clean clone using only README instructions
+- [ ] No hard-coded secrets, no absolute local paths
+- [ ] Timeouts + retries on network, explicit waits in browser
+- [ ] One failing item does not stop the run; failures are summarised
+- [ ] Re-running does not duplicate work
+- [ ] Logs make a failure diagnosable without a debugger
+- [ ] Tests pass
