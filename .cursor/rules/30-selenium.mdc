@@ -1,0 +1,15 @@
+---
+description: Use when writing or reviewing Selenium or browser automation: locators, waits, page objects, scraping, failure screenshots.
+alwaysApply: false
+---
+
+- Selenium 4 only. Driver comes from Selenium Manager automatically: `webdriver.Chrome(options=opts)`. No webdriver-manager needed.
+- Headless by default via env var `HEADLESS=1`; allow a visible browser for debugging.
+- ALWAYS explicit waits: `WebDriverWait(driver, 10).until(EC.element_to_be_clickable(...))`. Never `time.sleep` as a fix.
+- Locator priority: `id` > `data-test`/`data-testid` attribute > `name` > stable CSS > short XPath. Avoid long absolute XPaths and index-based locators.
+- Page Object pattern: one class per page, locators as class attributes, methods return data or the next page. Assertions live in tests/main flow, not in page classes.
+- Handle: StaleElementReferenceException (re-find, retry once), ElementClickInterceptedException (scroll into view / wait for overlay), TimeoutException (log URL + take screenshot).
+- On any failure: save a screenshot and page source to `artifacts/` with a timestamp, then re-raise or record.
+- Always `driver.quit()` in `finally` (or a context manager).
+- Scraping several pages: collect from the current page, click next, wait for the content to change (staleness of old element), stop when next is missing/disabled.
+- Iframes: `driver.switch_to.frame(...)` then `switch_to.default_content()`. New tabs: `window_handles`.

@@ -1,0 +1,32 @@
+---
+description: Exam mode - timed project workflow and reliability defaults
+alwaysApply: true
+---
+
+# Exam mode (timed project, AI allowed)
+
+I am building a project under a time limit (about 2 hours). Optimise for: WORKING first, then RELIABLE, then CLEAN.
+I must be able to explain every line afterwards, so keep the code simple and readable.
+
+## Workflow you must follow
+1. Before writing code, restate the requirements as a numbered checklist in `REQUIREMENTS.md` (copy exact wording from the task). Mark any ambiguity under "Assumptions".
+2. Propose a minimal plan (max 8 steps). Build a thin end-to-end "vertical slice" first (input -> process -> output), then widen.
+3. Run the code after EVERY step. Never write more than ~60 lines without running something.
+4. Only use libraries from the task statement or the standard library plus: requests, selenium, pytest. Ask before adding anything else.
+5. No over-engineering: no frameworks, no async, no classes unless they remove duplication.
+6. Keep a `README.md` current: how to install, how to run, how to test, assumptions, known limitations.
+
+## Reliability defaults (this is my differentiator, always include)
+- Every network call: explicit timeout, retry with backoff on 429/5xx, `raise_for_status`.
+- Every browser wait: explicit wait, never `time.sleep` (except a clearly commented last resort).
+- Idempotent and resumable: record progress in a state file so a re-run does not duplicate work.
+- One item failing must not kill the whole run: catch per item, log, record the failure, continue, summarise at the end.
+- Use `logging` (not `print`) with timestamps; log what was attempted, what happened, and why it failed.
+- Secrets and URLs come from environment variables or a config file, never hard-coded.
+- Exit code 0 only if everything succeeded; non-zero if any item failed.
+
+## When I ask for a change
+Show a small diff-style change, not a full rewrite. Explain in 2 sentences why, in simple English.
+
+## Final 15 minutes
+Do not add features. Run the full flow from a clean state, run the tests, update README, list limitations honestly.

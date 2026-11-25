@@ -1,0 +1,15 @@
+---
+description: Python code style
+globs: "**/*.py"
+alwaysApply: false
+---
+
+- Python 3.10+, type hints on function signatures, short docstrings (one line).
+- Small functions (<30 lines), one job each. Separate: fetching, parsing/transforming, saving, orchestration.
+- Use `pathlib.Path`, `with open(..., encoding="utf-8")`, f-strings.
+- Never use a mutable default argument (`def f(x=[])`). Use `None` and create inside.
+- Never use bare `except:`. Catch specific exceptions; log with `log.exception(...)` when you swallow one.
+- No silent failures: if you catch and continue, log it AND record it.
+- Use `if __name__ == "__main__":` and `argparse` for the CLI entry point.
+- Constants in UPPER_CASE at the top of the module. No magic numbers inline.
+- Prefer list/dict comprehensions only when they stay readable.

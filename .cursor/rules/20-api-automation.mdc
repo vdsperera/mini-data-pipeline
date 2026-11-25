@@ -1,0 +1,14 @@
+---
+description: Use when writing or reviewing REST API automation code with requests: clients, retries, pagination, auth, API tests.
+alwaysApply: false
+---
+
+- Use ONE `requests.Session` with a mounted retry adapter (see `starter/src/http_client.py`). Always pass `timeout=`.
+- Retry GET/PUT/DELETE on 429/500/502/503/504. Do NOT blindly retry POST unless the API is idempotent (use an idempotency key or check first). Say so in README.
+- Call `resp.raise_for_status()` then `resp.json()`. Handle `requests.exceptions.JSONDecodeError`.
+- Handle pagination explicitly (page/limit, next link, or cursor) and stop on empty page. Cap max pages as a safety.
+- Respect 429 `Retry-After`.
+- Validate required fields in responses before using them; log and skip malformed records.
+- Auth: header from env var (`Authorization: Bearer ...`). Never log tokens.
+- Tests: mock the HTTP layer (`unittest.mock.patch` on `session.request`), cover success, 404, 500-then-success, timeout, malformed JSON.
+- Output (CSV/JSON): write to a temp file then `os.replace` so a crash never leaves a half-written file.
